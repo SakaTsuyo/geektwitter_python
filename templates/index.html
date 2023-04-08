@@ -1,0 +1,16 @@
+    {% extends 'layout.html' %}
+    {% block content %}
+<body>
+    Hello World
+<h1>GeekTwitter_python</h1>
+<a href="new">新規投稿</a>
+<a href="login">ログイン</a>
+<a href="signup">新規登録</a>
+
+<div class="tweet">
+    <p>
+        <label><span>tweet一覧</label>
+        <p>{{tweet_content}}</p>
+    </p>
+</div>
+{% endblock %}
