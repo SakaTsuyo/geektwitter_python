@@ -1,32 +1,53 @@
-import os
 from flask import Flask, render_template, request, redirect, session
 import numpy as np
-import sqlite3 as sqlite
 import pandas as pd
-import datetime
-import db.tweet as tweet
-
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+db = SQLAlchemy(app)
 
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(20), nullable=False)
+    body = db.Column(db.String(140), nullable=False)
+    
 @app.route('/')
 def index():
-    tweets = tweet.get_tweets()
-    return render_template("index.html", tweets=tweets)
+    posts = Post.query.all()
+    return render_template("index.html", posts = posts)
 
 @app.route('/new', methods=['GET','POST'])
-def new():
-    if request.method == 'GET':
+def create():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        body = request.form.get('body')
+        post = Post(title=title,body=body)
+        db.session.add(post)
+        db.session.commit()
+        return redirect('/')
+    else:
         return render_template('new.html')
-    elif request.method == 'POST':
-        tweet_content = request.form.get('tweet')
-        tweet.add_tweet(tweet_content)
+
+@app.route('/<int:id>/edit',methods=['GET','POST'])
+def edit(id):
+    post = Post.query.get(id)
+    if request.method == 'GET':
+        return render_template('edit.html', post=post)
+    else:
+        title = request.form.get('title')
+        body = request.form.get('body')
+        db.session.commit()
         return redirect('/')
 
-@app.route('/edit')
-def edit():
-    return render_template('edit.html')
+@app.route('/<int:id>/delete', methods=['GET'])
+def delete(id):
+    post = Post.query.get(id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect('/')
 
 if __name__ == "__main__":
-    tweet.create_tweet_table()
+    # Post.create_tweet_table()
     app.run(debug=True)

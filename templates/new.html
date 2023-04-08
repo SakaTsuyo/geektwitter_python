@@ -1,12 +1,11 @@
 {% extends 'layout.html' %}
-    {% block content %}
-<h1>GeekTwitter_python</h1>
-<h3>新規Tweet</h3>
-<form action="/new" method="POST" name="new">
-    <p class="new_form">
-        <label><span>Tweetする</label>
-        <input type="text" name="tweet">
-    </p>
-    <input type="submit" value="Tweetする">
+{% block content %}
+<h3>新規投稿</h3>
+<form method="POST" name="new">
+    <label for="title">題名</label>
+    <input type="text" name="title">
+    <label><span>Tweetする</label>
+    <input type="text" name="body">
+    <input type="submit" value="投稿する">
 </form>
 {% endblock %}
