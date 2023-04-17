@@ -28,12 +28,14 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
     
-@app.route('/')
+@app.route('/', methods=["GET"])
 def index():
     posts = Tweet.query.all()
-    return render_template("index.html", posts = posts)
+    users = User.query.all()
+    return render_template("index.html", posts = posts,users=users)
 
 @app.route('/new', methods=['GET','POST'])
+@login_required
 def create():
     if request.method == 'POST':
         title = request.form.get('title')
@@ -46,6 +48,7 @@ def create():
         return render_template('new.html')
 
 @app.route('/<int:id>/edit',methods=['GET','POST'])
+@login_required
 def edit(id):
     post = Tweet.query.get(id)
     if request.method == 'GET':
@@ -53,10 +56,14 @@ def edit(id):
     else:
         title = request.form.get('title')
         body = request.form.get('body')
+        post.title = title
+        post.body = body
+        db.session.add(post)
         db.session.commit()
         return redirect('/')
 
 @app.route('/<int:id>/delete', methods=['GET'])
+@login_required
 def delete(id):
     post = Tweet.query.get(id)
     db.session.delete(post)
@@ -71,7 +78,7 @@ def signup():
         user = User(username=username, password=generate_password_hash(password, method='sha256'))
         db.session.add(user)
         db.session.commit()
-        return redirect('login')
+        return redirect('/login')
     else:
         return render_template('signup.html')
 
@@ -80,18 +87,18 @@ def login():
     if request.method == "POST":
         username = request.form.get('username')
         password = request.form.get('password')
-        user = User.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
         if check_password_hash(user.password, password):
             login_user(user)
-            return redirect('/tweets')
-        else:
-            return render_template('login.html')
+            return redirect('/')
+    else:
+        return render_template('login.html')
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect('login')
+    return redirect('/login')
 
 if __name__ == "__main__":
     # Post.create_tweet_table()
