@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
+<div class="edit">
     <h1>編集</h1>
     <form method="post">
         <label for="title">タイトル</label>
@@ -8,4 +9,5 @@
         <input type="text" name="body" value={{post.body}}>
         <input type="submit" value="編集する">
     </form>
+</div>
 {% endblock %}

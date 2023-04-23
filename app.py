@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 import numpy as np
 import pandas as pd
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc, or_
 from datetime import datetime
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -30,7 +31,12 @@ def load_user(user_id):
     
 @app.route('/', methods=["GET"])
 def index():
-    posts = Tweet.query.all()
+    text_input = request.args.get('search')
+    text_input = request.args.get('search')
+    if text_input is None or len(text_input) == 0:
+        posts = Tweet.query.all()
+    else:
+        posts = db.session.query(Tweet).filter(or_(Tweet.body.like(text_input), Tweet.title.like(text_input))).all()
     users = User.query.all()
     return render_template("index.html", posts = posts,users=users)
 

@@ -1,11 +1,14 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h3>新規投稿</h3>
-<form method="POST" name="new">
-    <label for="title">題名</label>
-    <input type="text" name="title">
-    <label><span>Tweetする</label>
-    <input type="text" name="body">
-    <input type="submit" value="投稿する">
-</form>
+<div class="new">
+    <h3>新規投稿</h3>
+    <form method="POST" name="new">
+        <label for="title">題名</label>
+        <input type="text" name="title">
+        <label><span>Tweetする</label>
+        <input type="text" name="body">
+        <input type="submit" value="投稿する">
+    </form>
+</div>
+
 {% endblock %}
