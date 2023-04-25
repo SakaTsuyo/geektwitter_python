@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session,flash,abort
 import numpy as np
 import pandas as pd
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc, or_
 from datetime import datetime
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
@@ -15,15 +15,15 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-class Tweet(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(20), nullable=False)
-    body = db.Column(db.String(140), nullable=False)
-    
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(25))
+class Tweet(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(20), nullable=False)
+    body = db.Column(db.String(140), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -46,7 +46,8 @@ def create():
     if request.method == 'POST':
         title = request.form.get('title')
         body = request.form.get('body')
-        post = Tweet(title=title,body=body)
+        user_id = current_user.id
+        post = Tweet(title=title,body=body,user_id=user_id)
         db.session.add(post)
         db.session.commit()
         return redirect('/')
@@ -57,6 +58,8 @@ def create():
 @login_required
 def edit(id):
     post = Tweet.query.get(id)
+    if post.user_id != current_user.id:
+        abort(403)
     if request.method == 'GET':
         return render_template('edit.html', post=post)
     else:
@@ -72,6 +75,8 @@ def edit(id):
 @login_required
 def delete(id):
     post = Tweet.query.get(id)
+    if post.user_id != current_user.id:
+        abort(403)
     db.session.delete(post)
     db.session.commit()
     return redirect('/')
@@ -81,10 +86,21 @@ def signup():
     if request.method == "POST":
         username = request.form.get('username')
         password = request.form.get('password')
-        user = User(username=username, password=generate_password_hash(password, method='sha256'))
-        db.session.add(user)
-        db.session.commit()
-        return redirect('/login')
+        if not username or not password:
+            flash('ユーザー名とパスワードを入力してください。')
+            return redirect('/signup')
+        elif len(username) < 4 or len(password) < 8:
+            flash('ユーザー名は4文字以上、パスワードは8文字以上である必要があります。')
+            return redirect('/signup')
+        elif User.query.filter_by(username=username).first():
+            flash('ユーザー名が既に使用されています。')
+            return redirect('/signup')
+        else:
+            user = User(username=username, password=generate_password_hash(password, method='sha256'))
+            db.session.add(user)
+            db.session.commit()
+            flash('ユーザー登録が完了しました。')
+            return redirect('/login')
     else:
         return render_template('signup.html')
 
@@ -94,8 +110,11 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         user = User.query.filter_by(username=username).first()
-        if check_password_hash(user.password, password):
+        if user and check_password_hash(user.password, password):
             login_user(user)
+            return redirect('/')
+        else:
+            flash('ユーザー名またはパスワードが間違っています。')
             return redirect('/')
     else:
         return render_template('login.html')
@@ -107,5 +126,4 @@ def logout():
     return redirect('/login')
 
 if __name__ == "__main__":
-    # Post.create_tweet_table()
     app.run(debug=True)

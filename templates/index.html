@@ -8,16 +8,16 @@
         </form>
     </div>
     <a href="new" name="new"class="btn btn-outline-info">新規投稿</a>
+    <div>
+        {% if current_user.is_authenticated %}
+            <p>現在ログインしているユーザー：{{ current_user.username }}</p>
+        {% endif %}
+    </div>
     <class name="tweet">
         <h1>投稿一覧</h1>
         {%for post in posts%}
-        {%for user in users%}
         <div>
-            <p>{{user.id}}:<b>{{user.username}}</p>
-        </div>
-        {%endfor%}
-        <div>
-            <p>{{post.id}}:<b>{{post.title}}</b>{{post.body}}</p>
+            <p>{{post.title}}</b>{{post.body}}</p>
             <a href="{{post.id}}/edit">編集</a>
             <a href="{{post.id}}/delete">削除</a>
         </div>
