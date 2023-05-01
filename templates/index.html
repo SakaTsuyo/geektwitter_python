@@ -7,22 +7,25 @@
             <input type="submit" value="検索">
         </form>
     </div>
-    <a href="new" name="new"class="btn btn-outline-info">新規投稿</a>
-    <div>
+    <div class="user container">
         {% if current_user.is_authenticated %}
             <p>現在ログインしているユーザー：{{ current_user.username }}</p>
         {% endif %}
     </div>
-    <class name="tweet">
-        <h1>投稿一覧</h1>
-        {%for post in posts%}
-        <div>
-            <p>{{post.title}}</b>{{post.body}}</p>
-            <a href="{{post.id}}/edit">編集</a>
-            <a href="{{post.id}}/delete">削除</a>
+    <a href="new" name="new"class="btn btn-outline-info">新規投稿</a>
+    <div class="container">
+        <h1 class="title">投稿一覧</h1>
+        <div class="row">
+            {%for post in posts%}
+                <div class="col-md-4">
+                    <article class="tweet">
+                        <p>{{post.title}}:</b>{{post.body}}</p>
+                        <a href="{{post.id}}/edit">編集</a>
+                        <a href="{{post.id}}/delete">削除</a>
+                    </article>
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-        
-    </class>
+    </div>
 </main>
 {% endblock %}

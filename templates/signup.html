@@ -1,14 +1,17 @@
 {% extends 'layout.html' %}
 {% block content %}
-<div class="signup">
-    <h1>ユーザ登録</h1>
+<div class="new">
     <form action="/signup" method="POST">
-        <label for="">ユーザ名</label>
-        <input type="text" name="username">
-        <label for="">パスワード</label>
-        <input type="password" name="password">
-        <input type="submit" value="新規登録">
+        <legend>GeekTwitterに新規登録する</legend>
+        <div class="mb-3">
+            <label class="form-label">ユーザー名</label>
+            <input type="text" class="form-control" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">パスワード</label>
+            <input type="password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">サインアップ</button>
     </form>
 </div>
-<a href="/">ホームに戻る</a>
 {% endblock %}
