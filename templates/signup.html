@@ -1,17 +1,19 @@
 {% extends 'layout.html' %}
 {% block content %}
-<div class="new">
+<div class="signup">
     <form action="/signup" method="POST">
-        <legend>GeekTwitterに新規登録する</legend>
-        <div class="mb-3">
-            <label class="form-label">ユーザー名</label>
-            <input type="text" class="form-control" aria-describedby="emailHelp">
+        <div class="frame">
+            <h3>GeekTwitterにサインアップする</h3>
+          </div>
+        <div class="box1">
+            <label for="text1" id="l_text1">ユーザー名</label>
+            <input id="text1" type="text">
         </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">パスワード</label>
-            <input type="password" class="form-control">
+        <div class="box1">
+            <label for="text2" id="l_text2">パスワード</label>
+            <input id="text2" type="password">
         </div>
-        <button type="submit" class="btn btn-primary">サインアップ</button>
+        <button class="btn1" type="submit">サインアップ</button>
     </form>
 </div>
 {% endblock %}
