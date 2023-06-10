@@ -222,3 +222,14 @@ form{
         visibility: visible;
         opacity: 1;
     }
+    .components{
+        margin-top: 130px;
+        padding: 30px 0px;
+    }
+    .Bootstrap{
+        padding: 50px 0px;
+    }
+    .gridsystem{
+        margin-top: 130px;
+
+    }

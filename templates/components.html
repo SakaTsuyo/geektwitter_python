@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="components">
+    <a href="/">戻る</a>
+    <!-- この中に好きなボタンとカードを入れよう！！ -->
+    <h1>Button</h1>
+    <div>
+        <button type="button" class="btn btn-primary">Primary</button>
+    </div>
+    <h1>Card</h1>
+    <div class="card" style="width: 18rem;">
+        <img src="..\static\image\坂上豪 秋季大会🏆_221028.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+    <div class="card" style="width: 18rem;">
+        <img src="..\static\image\坂上豪.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

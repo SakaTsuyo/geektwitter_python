@@ -125,5 +125,14 @@ def logout():
     logout_user()
     return redirect('/login')
 
+@app.route('/components',methods=['GET'])
+def components():
+    return render_template('components.html')
+
+@app.route('/gridsystem',methods=['GET'])
+def gridsystems():
+    return render_template('gridsystem.html')
+
+
 if __name__ == "__main__":
     app.run(debug=True)
